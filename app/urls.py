@@ -7,6 +7,7 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),
     path("items", views.items, name="items"),
+    path("categories", views.categories, name="categories"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
