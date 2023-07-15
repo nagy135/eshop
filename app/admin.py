@@ -6,7 +6,8 @@ from .models import (
     Order,
     Item,
     BucketItem,
-    Image
+    Image,
+    Category
 )
 
 admin.site.register(User)
@@ -15,3 +16,4 @@ admin.site.register(Order)
 admin.site.register(Item)
 admin.site.register(BucketItem)
 admin.site.register(Image)
+admin.site.register(Category)

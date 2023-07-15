@@ -1,12 +1,13 @@
 from django.db import models
 from django.db.models.deletion import CASCADE
+from treebeard.mp_tree import MP_Node
 from django.db.models.fields import (
     CharField,
     DateTimeField,
     FloatField,
     IntegerField
 )
-from django.db.models.fields.related import ForeignKey
+from django.db.models.fields.related import ForeignKey, ManyToManyField
 
 
 class User(models.Model):
@@ -46,6 +47,15 @@ class Order(models.Model):
     created_at: DateTimeField = DateTimeField("created at", auto_now_add=True)
 
 
+class Category(MP_Node):
+    name = models.CharField(max_length=30)
+
+    node_order_by = ['name']
+
+    def __str__(self):
+        return 'Category: {}'.format(self.name)
+
+
 class Item(models.Model):
     class Status(models.TextChoices):
         ACTIVE = 'ACTIVE', 'Active'
@@ -61,6 +71,8 @@ class Item(models.Model):
     description: CharField = CharField(max_length=200)
     price: FloatField = FloatField()
     remaining: IntegerField = IntegerField()
+
+    categories: ManyToManyField = ManyToManyField(Category)
 
     created_at: DateTimeField = DateTimeField("created at", auto_now_add=True)
 
@@ -81,58 +93,3 @@ class Image(models.Model):
     created_at: DateTimeField = DateTimeField("created at", auto_now_add=True)
 
 
-# // Use DBML to define your database structure
-# // Docs: https://dbml.dbdiagram.io/docs
-#
-#
-# Table users {
-#   id integer [primary key]
-#   name varchar
-#   email varchar
-#   address varchar
-# }
-#
-# Table orders {
-#   id integer [primary key]
-#   bucket_id integer
-#   status varchar
-# }
-#
-# Table images {
-#   id integer [primary key]
-#   item_id integer
-#
-#   name varchar
-#   path varchar
-#   created_at timestamp
-# }
-#
-# Table items {
-#   id integer [primary key]
-#   name varchar
-#   description varchar
-#   price float
-#   status varchar
-#   remaining integer
-#   created_at timestamp
-# }
-#
-# Table bucket_items {
-#   id integer [primary key]
-#   item_id integer
-#   bucket_id integer
-#   amount integer
-#   created_at timestamp
-# }
-#
-# Table buckets {
-#   id integer [primary key]
-#   user_id integer
-# }
-#
-#
-# Ref: items.id < images.item_id
-# Ref: items.id < bucket_items.item_id
-# Ref: buckets.id < bucket_items.bucket_id
-# Ref: users.id < buckets.user_id
-# Ref: buckets.id < orders.bucket_id
