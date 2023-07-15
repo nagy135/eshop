@@ -19,35 +19,6 @@ class User(models.Model):
     created_at: DateTimeField = DateTimeField("created at", auto_now_add=True)
 
 
-class Bucket(models.Model):
-    created_at: DateTimeField = DateTimeField("created at", auto_now_add=True)
-
-    user: ForeignKey = ForeignKey(User, on_delete=CASCADE)
-
-
-class Order(models.Model):
-    class Status(models.TextChoices):
-        CREATED = 'CREATED', 'Created'
-        PENDING = 'PENDING', 'Pending'
-        IN_PROGRESS = 'IN_PROGRESS', 'In Progress'
-        SHIPPED = 'SHIPPED', 'Shipped'
-        DELIVERED = 'DELIVERED', 'Delivered'
-        CANCELED = 'CANCELED', 'Canceled'
-
-    status: CharField = CharField(
-        max_length=20,
-        choices=Status.choices,
-        default=Status.CREATED,
-    )
-    name: CharField = CharField(max_length=200)
-    status: CharField = CharField(max_length=200)
-    address: CharField = CharField(max_length=600)
-
-    bucket: ForeignKey = ForeignKey(Bucket, on_delete=CASCADE)
-
-    created_at: DateTimeField = DateTimeField("created at", auto_now_add=True)
-
-
 class Category(MP_Node):
     name = models.CharField(max_length=30)
 
@@ -78,11 +49,34 @@ class Item(models.Model):
     created_at: DateTimeField = DateTimeField("created at", auto_now_add=True)
 
 
-class BucketItem(models.Model):
+class Bucket(models.Model):
     created_at: DateTimeField = DateTimeField("created at", auto_now_add=True)
 
-    item: ForeignKey = ForeignKey(Item, on_delete=CASCADE)
+    user: ForeignKey = ForeignKey(User, on_delete=CASCADE)
+    items: ManyToManyField = ManyToManyField(Item)
+
+
+class Order(models.Model):
+    class Status(models.TextChoices):
+        CREATED = 'CREATED', 'Created'
+        PENDING = 'PENDING', 'Pending'
+        IN_PROGRESS = 'IN_PROGRESS', 'In Progress'
+        SHIPPED = 'SHIPPED', 'Shipped'
+        DELIVERED = 'DELIVERED', 'Delivered'
+        CANCELED = 'CANCELED', 'Canceled'
+
+    status: CharField = CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.CREATED,
+    )
+    name: CharField = CharField(max_length=200)
+    status: CharField = CharField(max_length=200)
+    address: CharField = CharField(max_length=600)
+
     bucket: ForeignKey = ForeignKey(Bucket, on_delete=CASCADE)
+
+    created_at: DateTimeField = DateTimeField("created at", auto_now_add=True)
 
 
 class Image(models.Model):
