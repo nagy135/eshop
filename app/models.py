@@ -7,6 +7,7 @@ from django.db.models.fields import (
     FloatField,
     IntegerField
 )
+from django.db.models import ImageField
 from django.db.models.fields.related import ForeignKey, ManyToManyField
 
 
@@ -86,10 +87,8 @@ class BucketItem(models.Model):
 
 class Image(models.Model):
     name: CharField = CharField(max_length=200)
-    path: CharField = CharField(max_length=200)
+    image: ImageField = ImageField(upload_to='images')
 
     item: ForeignKey = ForeignKey(Item, on_delete=CASCADE)
 
     created_at: DateTimeField = DateTimeField("created at", auto_now_add=True)
-
-
