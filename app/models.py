@@ -70,9 +70,7 @@ class Order(models.Model):
         choices=Status.choices,
         default=Status.CREATED,
     )
-    name: CharField = CharField(max_length=200)
-    status: CharField = CharField(max_length=200)
-    address: CharField = CharField(max_length=600)
+    address: CharField = CharField(max_length=600, default='')
 
     bucket: ForeignKey = ForeignKey(Bucket, on_delete=CASCADE)
 
