@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.core.serializers import serialize
 
 from .models import Item
@@ -11,4 +11,4 @@ def index(request):
 def items(request):
     items = Item.objects.all()
     data = serialize('json', items)
-    return HttpResponse(data,kcontent_type='application/json')
+    return HttpResponse(data, content_type='application/json')
