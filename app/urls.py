@@ -9,6 +9,7 @@ urlpatterns = [
     path("items", views.items, name="items"),
     path("categories", views.categories, name="categories"),
     path("images", views.images, name="images"),
+    path("add_to_cart", views.add_to_cart, name="add_to_cart"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
