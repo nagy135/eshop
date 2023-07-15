@@ -5,11 +5,12 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    path("", views.index, name="index"),
     path("items", views.items, name="items"),
     path("categories", views.categories, name="categories"),
     path("images", views.images, name="images"),
-    path("add_to_cart", views.add_to_cart, name="add_to_cart"),
+    path("add_to_bucket", views.add_to_bucket, name="add_to_bucket"),
+    path("create_bucket", views.create_bucket, name="create_bucket"),
+    path("get_bucket", views.get_bucket, name="get_bucket"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
