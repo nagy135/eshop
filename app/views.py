@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.core.serializers import serialize
 
-from .models import Category, Item
+from .models import Category, Item, Image
 
 
 def index(request):
@@ -11,6 +11,12 @@ def index(request):
 def items(request):
     items = Item.objects.all()
     data = serialize('json', items)
+    return HttpResponse(data, content_type='application/json')
+
+
+def images(request):
+    images = Image.objects.filter(item=request.GET.get('item'))
+    data = serialize('json', images)
     return HttpResponse(data, content_type='application/json')
 
 
