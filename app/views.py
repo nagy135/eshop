@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
 
+from eshop.settings import MEDIA_URL
+
 from .utils import serialize_model
 
 from .models import Bucket, Category, Configuration, Item, Image, User, Order
@@ -28,11 +30,11 @@ def categories(request):
     return HttpResponse(json.dumps(categories), content_type='application/json')
 
 def configuration(request):
-    configuration = Configuration.objects.first()
+    configuration = Configuration.objects.values('banner', 'id').first()
     if configuration is None:
         return HttpResponse(status=404)
-
-    return HttpResponse(serialize_model(configuration), content_type='application/json')
+    configuration["banner"] = f"{MEDIA_URL}{configuration['banner']}"
+    return HttpResponse(json.dumps(configuration), content_type='application/json')
 
 
 # Logic
