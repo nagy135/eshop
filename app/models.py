@@ -22,14 +22,17 @@ class User(models.Model):
 
     created_at: DateTimeField = DateTimeField("created at", auto_now_add=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Category(MP_Node):
     name = models.CharField(max_length=30)
 
     node_order_by = ['name']
 
-    def __str__(self):
-        return 'Category: {}'.format(self.name)
+    def __str__(self) -> str:
+        return self.name
 
 
 class Item(models.Model):
@@ -51,6 +54,9 @@ class Item(models.Model):
     categories: ManyToManyField = ManyToManyField(Category)
 
     created_at: DateTimeField = DateTimeField("created at", auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Bucket(models.Model):
@@ -88,3 +94,6 @@ class Image(models.Model):
     item: ForeignKey = ForeignKey(Item, on_delete=CASCADE)
 
     created_at: DateTimeField = DateTimeField("created at", auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.name
