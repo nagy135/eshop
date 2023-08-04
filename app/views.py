@@ -1,4 +1,5 @@
 import json
+import os
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
@@ -33,7 +34,8 @@ def configuration(request):
     configuration = Configuration.objects.values('banner', 'id').first()
     if configuration is None:
         return HttpResponse(status=404)
-    configuration["banner"] = f"{MEDIA_URL}{configuration['banner']}"
+    configuration["banner"] = f"{MEDIA_URL[1:]}{configuration['banner']}"
+    configuration["title"] = os.environ.get('NAME', 'website')
     return HttpResponse(json.dumps(configuration), content_type='application/json')
 
 
