@@ -6,7 +6,7 @@ from django.core.serializers import serialize
 
 from eshop.settings import MEDIA_URL
 
-from .utils import serialize_model
+from .utils import collect_related
 
 from .models import Bucket, Category, Configuration, Item, Image, User, Order
 from .validators import AddToBucketRequest, GetBucketRequest
@@ -15,9 +15,18 @@ from .validators import AddToBucketRequest, GetBucketRequest
 # Listing
 
 def items(request):
-    items = Item.objects.all()
-    data = serialize('json', items)
-    return HttpResponse(data, content_type='application/json')
+    category_id = request.GET.get('categoryId')
+
+    items = Item.objects.all()\
+        .prefetch_related('image_set')\
+        .values('name', 'price', 'image__image')
+
+    if category_id is not None:
+        items = items.filter(categories__pk=category_id)
+
+    items = collect_related(list(items), key='name', target='image__image')
+
+    return HttpResponse(json.dumps(items), content_type='application/json')
 
 
 def images(request):
@@ -29,6 +38,7 @@ def images(request):
 def categories(request):
     categories = Category.dump_bulk()
     return HttpResponse(json.dumps(categories), content_type='application/json')
+
 
 def configuration(request):
     configuration = Configuration.objects.values('banner', 'id').first()
