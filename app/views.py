@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
 
-from .models import Bucket, Category, Item, Image, User, Order
+from .utils import serialize_model
+
+from .models import Bucket, Category, Configuration, Item, Image, User, Order
 from .validators import AddToBucketRequest, GetBucketRequest
 
 
@@ -23,7 +25,14 @@ def images(request):
 
 def categories(request):
     categories = Category.dump_bulk()
-    return HttpResponse(categories, content_type='application/json')
+    return HttpResponse(json.dumps(categories), content_type='application/json')
+
+def configuration(request):
+    configuration = Configuration.objects.first()
+    if configuration is None:
+        return HttpResponse(status=404)
+
+    return HttpResponse(serialize_model(configuration), content_type='application/json')
 
 
 # Logic

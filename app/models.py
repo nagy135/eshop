@@ -11,6 +11,10 @@ from django.db.models import ImageField
 from django.db.models.fields.related import ForeignKey, ManyToManyField
 
 
+class Configuration(models.Model):
+    banner = models.FileField(upload_to='banner/')
+
+
 class User(models.Model):
     name: CharField = CharField(max_length=200)
     email: CharField = CharField(max_length=200)

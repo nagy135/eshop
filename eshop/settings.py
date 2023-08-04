@@ -30,7 +30,10 @@ SECRET_KEY = 'django-insecure-vaaay2do7f#$(a$$4%(z@$lv*=+5g!mhuul3&+0-0ou+8=wl=)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS: list[str] = []
+ALLOWED_HOSTS: list[str] = [
+    'api',
+    'localhost'
+]
 
 
 # Application definition
@@ -45,6 +48,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'treebeard'
 ]
+
+if DEBUG is True:
+    INSTALLED_APPS.append('corsheaders')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

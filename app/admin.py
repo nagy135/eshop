@@ -5,6 +5,7 @@ from treebeard.forms import movenodeform_factory
 
 
 from .models import (
+    Configuration,
     User,
     Bucket,
     Order,
@@ -29,4 +30,5 @@ admin.site.register(Bucket)
 admin.site.register(Order)
 admin.site.register(Item)
 admin.site.register(Image)
+admin.site.register(Configuration)
 admin.site.register(Category, MyAdmin)
