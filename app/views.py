@@ -14,19 +14,29 @@ from .validators import AddToBucketRequest, GetBucketRequest
 
 # Listing
 
+@csrf_exempt
 def items(request):
     category_id = request.GET.get('categoryId')
+    page = request.GET.get('page')
+    page_size = request.GET.get('pageSize')
 
     items = Item.objects.all()\
         .prefetch_related('image_set')\
-        .values('name', 'price', 'image__image')
+        .values('name', 'price', 'description', 'image__image')
 
     if category_id is not None:
         items = items.filter(categories__pk=category_id)
 
-    items = collect_related(list(items), key='name', target='image__image')
+    page_size = int(page_size) if page_size is not None else 7
+    page = int(page) if page is not None else 0
 
-    return HttpResponse(json.dumps(items), content_type='application/json')
+    items = collect_related(list(items), key='name', target='image__image')
+    items *= 3
+
+    # OPTIM: this should be on db level with joins, revisit
+    items = items[page*page_size:page*page_size+page_size]
+
+    return HttpResponse(json.dumps(items), content_type='application/json', headers={"Access-Control-Allow-Origin": '*'})
 
 
 def images(request):

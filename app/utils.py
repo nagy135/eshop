@@ -17,12 +17,9 @@ def collect_related(li: list, key: str, target: str) -> list:
     for item in li:
         key_i = item[key]
         if key_i in res:
-            print(f"extending {key_i}")
             res[key_i][target].append(item[target])
         else:
-            print(f"adding {key_i}")
             res[key_i] = item
             res[key_i][target] = [item[target]] if item[target] is not None else []
-        pprint(res)
 
     return [res[k] for k in res]

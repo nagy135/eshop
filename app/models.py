@@ -7,7 +7,7 @@ from django.db.models.fields import (
     FloatField,
     IntegerField
 )
-from django.db.models import ImageField
+from django.db.models import ImageField, TextField
 from django.db.models.fields.related import ForeignKey, ManyToManyField
 
 
@@ -47,7 +47,7 @@ class Item(models.Model):
         default=Status.ACTIVE,
     )
     name: CharField = CharField(max_length=200)
-    description: CharField = CharField(max_length=200)
+    description: TextField = TextField(max_length=20000)
     price: FloatField = FloatField()
     remaining: IntegerField = IntegerField()
 
