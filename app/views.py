@@ -68,8 +68,8 @@ def add_to_bucket(request):
     if not AddToBucketRequest(data=body).is_valid():
         return HttpResponse(status=500)
 
-    item_id: int = body["item_id"]
-    user_id: int = body["user_id"]
+    item_id: int = body["itemId"]
+    user_id: int = body["userId"]
 
     item = Item.objects.get(pk=item_id)
     user = User.objects.get(pk=user_id)
@@ -97,7 +97,7 @@ def get_bucket(request):
     if not GetBucketRequest(data=body).is_valid():
         return HttpResponse(status=500)
 
-    bucket_id: int = body["bucket_id"]
+    bucket_id: int = body["bucketId"]
 
     bucket = Bucket.objects.get(pk=bucket_id)
 

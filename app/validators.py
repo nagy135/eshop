@@ -4,11 +4,11 @@ from rest_framework.serializers import IntegerField, Serializer
 # Add to bucket
 
 class AddToBucketRequest(Serializer):
-    user_id = IntegerField(required=True)
-    item_id = IntegerField(required=True)
+    userId = IntegerField(required=True)
+    itemId = IntegerField(required=True)
 
 
 # Get bucket
 
 class GetBucketRequest(Serializer):
-    bucket_id = IntegerField(required=True)
+    bucketId = IntegerField(required=True)
