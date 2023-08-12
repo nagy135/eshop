@@ -34,6 +34,9 @@ class Category(MP_Node):
     def __str__(self) -> str:
         return self.name
 
+    class Meta:
+        verbose_name_plural = "Categories"
+
 
 class Item(models.Model):
     class Status(models.TextChoices):
