@@ -30,7 +30,8 @@ SECRET_KEY = 'django-insecure-vaaay2do7f#$(a$$4%(z@$lv*=+5g!mhuul3&+0-0ou+8=wl=)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-CORS_ORIGIN_ALLOW_ALL = DEBUG
+CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
+
 
 ALLOWED_HOSTS: list[str] = [
     'api',
@@ -48,13 +49,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'treebeard'
+    'treebeard',
+    'corsheaders'
 ]
 
-if DEBUG is True:
-    INSTALLED_APPS.append('corsheaders')
+# if DEBUG is True:
+#     INSTALLED_APPS.append('corsheaders')
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
