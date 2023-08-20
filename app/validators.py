@@ -1,4 +1,4 @@
-from rest_framework.serializers import IntegerField, Serializer
+from rest_framework.serializers import IntegerField, Serializer, CharField
 
 
 # Add to bucket
@@ -11,4 +11,9 @@ class AddToBucketRequest(Serializer):
 # Get bucket
 
 class GetBucketRequest(Serializer):
-    bucketId = IntegerField(required=True)
+    userId = IntegerField(required=True)
+
+
+# Create user
+class GetOrCreateUserRequest(Serializer):
+    email = CharField(required=True)

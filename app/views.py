@@ -1,6 +1,6 @@
 import json
 import os
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
 
@@ -9,7 +9,11 @@ from eshop.settings import MEDIA_URL
 from .utils import collect_related
 
 from .models import Bucket, Category, Configuration, Item, Image, User, Order
-from .validators import AddToBucketRequest, GetBucketRequest
+from .validators import (
+    AddToBucketRequest,
+    GetBucketRequest,
+    GetOrCreateUserRequest
+)
 
 
 # Listing
@@ -22,7 +26,7 @@ def items(request):
 
     items = Item.objects.all()\
         .prefetch_related('image_set')\
-        .values('name', 'price', 'description', 'image__image')
+        .values('id', 'name', 'price', 'description', 'image__image')
 
     if category_id is not None:
         items = items.filter(categories__pk=category_id)
@@ -61,9 +65,29 @@ def configuration(request):
 
 # Logic
 
+
+@csrf_exempt
+def get_or_create_user(request):
+    body = json.loads(request.body)
+
+    if not GetOrCreateUserRequest(data=body).is_valid():
+        return HttpResponse(status=500)
+
+    email: int = body["email"]
+
+    user = User.objects.filter(email=email).first()
+    if user is None:
+        user = User.objects.create(email=email, name=email, address='')
+
+    id = user.pk
+
+    return JsonResponse({"id": id})
+
+
 @csrf_exempt
 def add_to_bucket(request):
     body = json.loads(request.body)
+    print('body', body)
 
     if not AddToBucketRequest(data=body).is_valid():
         return HttpResponse(status=500)
@@ -87,7 +111,7 @@ def add_to_bucket(request):
 
     bucket.items.add(item)
 
-    return HttpResponse(status=204)
+    return JsonResponse({"id": bucket.id})
 
 
 @csrf_exempt
@@ -97,9 +121,22 @@ def get_bucket(request):
     if not GetBucketRequest(data=body).is_valid():
         return HttpResponse(status=500)
 
-    bucket_id: int = body["bucketId"]
+    user_id: int = body["userId"]
 
-    bucket = Bucket.objects.get(pk=bucket_id)
+    user = User.objects.get(pk=user_id)
+    buckets = user.bucket_set\
+        .prefetch_related('order_set')\
+        .filter(order__status=Order.Status.CREATED)\
+        .all()
 
-    data = serialize('json', bucket.items.all())
-    return HttpResponse(data, content_type='application/json')
+    if len(buckets):
+        bucket = buckets[0]
+        items = bucket.items.all()\
+            .prefetch_related('image_set')
+        print('items', items)
+
+        data = serialize('json', items)
+        return HttpResponse(data, content_type='application/json')
+    else:
+        return JsonResponse({"status": "failed"})
+

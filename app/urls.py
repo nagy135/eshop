@@ -11,6 +11,7 @@ urlpatterns = [
     path("add_to_bucket", views.add_to_bucket, name="add_to_bucket"),
     path("get_bucket", views.get_bucket, name="get_bucket"),
     path("configuration", views.configuration, name="configuration"),
+    path("get_or_create_user", views.get_or_create_user, name="get_or_create_user"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
