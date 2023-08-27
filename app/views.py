@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.serializers import serialize
@@ -111,7 +112,10 @@ def add_to_bucket(request):
 
     bucket.items.add(item)
 
+    time.sleep(1)
+
     return JsonResponse({"id": bucket.id})
+
 
 
 @csrf_exempt
@@ -132,10 +136,10 @@ def get_bucket(request):
     if len(buckets):
         bucket = buckets[0]
         items = bucket.items.all()\
-            .prefetch_related('image_set')
-        print('items', items)
+            .prefetch_related('image_set')\
+            .values('id', 'name', 'description', 'price')
 
-        data = serialize('json', items)
+        data = json.dumps(list(items))
         return HttpResponse(data, content_type='application/json')
     else:
         return JsonResponse({"status": "failed"})
