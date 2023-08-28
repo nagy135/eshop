@@ -15,5 +15,11 @@ class GetBucketRequest(Serializer):
 
 
 # Create user
+
 class GetOrCreateUserRequest(Serializer):
     email = CharField(required=True)
+
+# Remove from bucket
+
+class RemoveFromBucketRequest(AddToBucketRequest):
+    pass

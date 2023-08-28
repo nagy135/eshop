@@ -13,7 +13,8 @@ from .models import Bucket, Category, Configuration, Item, Image, User, Order
 from .validators import (
     AddToBucketRequest,
     GetBucketRequest,
-    GetOrCreateUserRequest
+    GetOrCreateUserRequest,
+    RemoveFromBucketRequest
 )
 
 
@@ -115,6 +116,33 @@ def add_to_bucket(request):
 
     return JsonResponse({"id": bucket.id})
 
+@csrf_exempt
+def remove_from_bucket(request):
+    body = json.loads(request.body)
+
+    if not RemoveFromBucketRequest(data=body).is_valid():
+        return HttpResponse(status=500)
+
+    item_id: int = body["itemId"]
+    user_id: int = body["userId"]
+
+    item = Item.objects.get(pk=item_id)
+    user = User.objects.get(pk=user_id)
+
+    buckets = user.bucket_set\
+        .prefetch_related('order_set')\
+        .filter(order__status=Order.Status.CREATED)\
+        .all()
+
+    if not len(buckets):
+        return HttpResponse(status=500)
+
+    bucket = buckets[0]
+    bucket.items.remove(item)
+
+    time.sleep(1)
+
+    return JsonResponse({"id": bucket.id})
 
 
 @csrf_exempt
