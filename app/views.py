@@ -88,7 +88,6 @@ def get_or_create_user(request):
 @csrf_exempt
 def add_to_bucket(request):
     body = json.loads(request.body)
-    print('body', body)
 
     if not AddToBucketRequest(data=body).is_valid():
         return HttpResponse(status=500)
