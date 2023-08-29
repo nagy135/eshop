@@ -1,3 +1,4 @@
+import os
 import json
 from pprint import pprint
 from django.db.models import Model
@@ -23,3 +24,8 @@ def collect_related(li: list, key: str, target: str) -> list:
             res[key_i][target] = [item[target]] if item[target] is not None else []
 
     return [res[k] for k in res]
+
+def attach_currency_to_records(records: list, key: str):
+    currency = os.environ.get('CURRENCY', '€')
+    for record in records:
+        record[key] = str(record[key]) + ' ' + currency

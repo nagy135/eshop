@@ -7,7 +7,7 @@ from django.core.serializers import serialize
 
 from eshop.settings import MEDIA_URL
 
-from .utils import collect_related
+from .utils import collect_related, attach_currency_to_records
 
 from .models import Bucket, Category, Configuration, Item, Image, User, Order
 from .validators import (
@@ -166,7 +166,10 @@ def get_bucket(request):
             .prefetch_related('image_set')\
             .values('id', 'name', 'description', 'price')
 
-        data = json.dumps(list(items))
+        items = list(items)
+        attach_currency_to_records(items, 'price')
+
+        data = json.dumps(items)
         return HttpResponse(data, content_type='application/json')
     else:
         return JsonResponse({"status": "failed"})
