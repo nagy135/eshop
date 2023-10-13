@@ -35,7 +35,8 @@ CORS_ALLOWED_ORIGINS = ['http://localhost:3000']
 
 ALLOWED_HOSTS: list[str] = [
     'api',
-    'localhost'
+    'localhost',
+    'admin-eshop.infiniter.tech'
 ]
 
 
